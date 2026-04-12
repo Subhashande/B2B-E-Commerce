@@ -2,102 +2,84 @@ b2b-backend/
 │
 ├── src/
 │
-│   ├── config/
+│   ├── config/                 # App + DB + env config
 │   │   ├── db.js
 │   │   ├── env.js
 │   │   └── logger.js
 │
-│   ├── constants/
+│   ├── constants/              # Enums / static values
 │   │   ├── roles.js
 │   │   ├── orderStatus.js
 │   │   ├── paymentStatus.js
-│   │   ├── userStatus.js        🔥 (PENDING / APPROVED)
+│   │   ├── userStatus.js
 │   │   └── vendorStatus.js
 │
-│   ├── modules/
+│   ├── modules/                # 🔥 DOMAIN LAYER (business logic)
 │
 │   │   ├── auth/
-│   │   │   ├── auth.controller.js
-│   │   │   ├── auth.service.js
-│   │   │   ├── auth.routes.js
-│   │   │   ├── auth.validation.js
-│   │   │   └── auth.repository.js
-│   │
 │   │   ├── user/
-│   │   │   ├── user.controller.js
-│   │   │   ├── user.service.js
-│   │   │   ├── user.routes.js
-│   │   │   ├── user.validation.js
-│   │   │   ├── user.repository.js
-│   │   │   └── user.model.js
-│   │
-│   │   ├── company/              
-│   │   │   ├── company.controller.js
-│   │   │   ├── company.service.js
-│   │   │   ├── company.routes.js
-│   │   │   ├── company.validation.js
-│   │   │   ├── company.repository.js
-│   │   │   └── company.model.js
-│   │
+│   │   ├── company/
 │   │   ├── product/
-│   │   │   ├── product.controller.js
-│   │   │   ├── product.service.js
-│   │   │   ├── product.routes.js
-│   │   │   ├── product.validation.js
-│   │   │   ├── product.repository.js
-│   │   │   └── product.model.js
-│   │
 │   │   ├── order/
-│   │   │   ├── order.controller.js
-│   │   │   ├── order.service.js
-│   │   │   ├── order.routes.js
-│   │   │   ├── order.validation.js
-│   │   │   ├── order.repository.js
-│   │   │   └── order.model.js
-│   │
 │   │   ├── vendor/
-│   │   │   ├── vendor.controller.js
-│   │   │   ├── vendor.service.js
-│   │   │   ├── vendor.routes.js
-│   │   │   ├── vendor.validation.js
-│   │   │   ├── vendor.repository.js
-│   │   │   └── vendor.model.js
+│   │   ├── payment/
+│   │   └── admin/
 │   │
-│   │   ├── admin/
-│   │   │   ├── admin.controller.js
-│   │   │   ├── admin.service.js
-│   │   │   ├── admin.routes.js
-│   │   │   └── admin.repository.js
+│   │   # Each module contains:
+│   │   # controller, service, repository, model, routes, validation
 │
-│   ├── common/                  🔥 CLEAN SHARED LAYER
-│   │   ├── middlewares/
-│   │   ├── utils/
-│   │   ├── validators/
-│   │   ├── errors/
-│
-│   ├── infrastructure/          🔥 EXTERNAL SERVICES
+│   ├── infrastructure/         # 🔥 EXTERNAL SERVICES
+│   │
 │   │   ├── payment/
 │   │   │   └── razorpay.service.js
+│   │
 │   │   ├── email/
 │   │   │   └── email.service.js
+│   │
 │   │   ├── vendor/
 │   │   │   └── assignment.service.js
+│
+│   ├── shared/                 # 🔥 COMMON UTILITIES (CLEAN)
 │   │
-│   ├── routes/
+│   │   ├── middlewares/
+│   │   │   ├── auth.middleware.js
+│   │   │   ├── role.middleware.js
+│   │   │   ├── validate.middleware.js
+│   │   │   └── error.middleware.js
+│   │
+│   │   ├── utils/
+│   │   │   ├── generateToken.js
+│   │   │   ├── hashPassword.js
+│   │   │   ├── comparePassword.js
+│   │   │   ├── responseHandler.js
+│   │   │   └── asyncHandler.js
+│   │
+│   │   ├── validators/
+│   │   │   └── common.validation.js
+│   │
+│   │   └── errors/
+│   │       └── customError.js
+│
+│   ├── routes/                 # Central route management
 │   │   ├── index.js
 │   │   └── v1.routes.js
 │
-│   ├── jobs/
+│   ├── jobs/                   # Background jobs
 │   │   ├── orderCleanup.job.js
 │
-│   ├── docs/
+│   ├── docs/                   # API documentation
 │   │   └── swagger.js
 │
-│   ├── uploads/
+│   ├── uploads/                # File storage
 │
-│   └── app.js
+│   └── app.js                  # Express app
 │
-├── logs/
-├── tests/
+├── logs/                       # App logs
+├── tests/                      # Testing
+│
 ├── .env
-├── server.js
+├── .env.example
+├── .gitignore
+├── package.json
+├── server.js                   # Entry point
+└── README.md

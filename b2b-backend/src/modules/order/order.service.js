@@ -8,17 +8,19 @@ import {
 import Product from "../product/product.model.js";
 import User from "../user/user.model.js";
 
+import { USER_STATUS } from "../../constants/userStatus.js"; // ✅ added
+import { ORDER_STATUS } from "../../constants/orderStatus.js"; // ✅ added
+
 export const placeOrder = async (userId, data) => {
   const user = await User.findById(userId);
 
   if (!user) throw new Error("User not found");
 
-  if (user.status !== "APPROVED") {
+  if (user.status !== USER_STATUS.APPROVED) { // ✅ replaced
     throw new Error("User not approved");
   }
 
   let totalAmount = 0;
-
   const items = [];
 
   for (const item of data.items) {
@@ -46,6 +48,7 @@ export const placeOrder = async (userId, data) => {
     companyId: user.companyId,
     items,
     totalAmount,
+    status: ORDER_STATUS.PENDING, // ✅ explicitly added (safe)
   });
 
   return order;

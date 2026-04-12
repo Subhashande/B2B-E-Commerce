@@ -8,13 +8,16 @@ import {
 
 import Order from "../order/order.model.js";
 
+import { PAYMENT_STATUS } from "../../constants/paymentStatus.js"; // ✅ added
+import { ORDER_STATUS } from "../../constants/orderStatus.js"; // ✅ added
+
 export const createRazorpayOrder = async (orderId) => {
   const order = await Order.findById(orderId);
 
   if (!order) throw new Error("Order not found");
 
   const options = {
-    amount: order.totalAmount * 100, // paise
+    amount: order.totalAmount * 100,
     currency: "INR",
     receipt: order._id.toString(),
   };
@@ -25,6 +28,7 @@ export const createRazorpayOrder = async (orderId) => {
     orderId,
     razorpayOrderId: razorpayOrder.id,
     amount: order.totalAmount,
+    status: PAYMENT_STATUS.PENDING, // ✅ added
   });
 
   return razorpayOrder;
@@ -52,15 +56,14 @@ export const verifyPayment = async (data) => {
 
   if (!payment) throw new Error("Payment not found");
 
-  payment.status = "SUCCESS";
+  payment.status = PAYMENT_STATUS.SUCCESS; // ✅ replaced
   payment.razorpayPaymentId = razorpay_payment_id;
   payment.razorpaySignature = razorpay_signature;
 
   await payment.save();
 
-  // update order
   await Order.findByIdAndUpdate(payment.orderId, {
-    status: "PROCESSING",
+    status: ORDER_STATUS.PROCESSING, // ✅ replaced
   });
 
   return { message: "Payment verified successfully" };

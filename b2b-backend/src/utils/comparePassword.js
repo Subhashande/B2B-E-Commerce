@@ -1,7 +1,7 @@
-// common/utils/comparePassword.js
+// src/shared/utils/comparePassword.js
 
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
-export const comparePassword = async (password, hash) => {
-  return await bcrypt.compare(password, hash);
+export const comparePassword = async (entered, stored) => {
+  return await bcrypt.compare(entered, stored);
 };

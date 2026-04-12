@@ -1,12 +1,14 @@
-// modules/user/user.repository.js
+// src/modules/user/user.repository.js
 
 import User from "./user.model.js";
 
-export const getPendingUsers = () =>
-  User.find({ status: "PENDING" }).populate("companyId");
+export const getUsers = () => User.find().populate("companyId");
 
-export const updateUserStatus = (userId, status) =>
-  User.findByIdAndUpdate(userId, { status }, { new: true });
-
-export const findUserById = (id) =>
+export const getUserById = (id) =>
   User.findById(id).populate("companyId");
+
+export const updateUser = (id, data) =>
+  User.findByIdAndUpdate(id, data, { new: true });
+
+export const deleteUser = (id) =>
+  User.findByIdAndDelete(id);
