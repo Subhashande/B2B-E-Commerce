@@ -1,13 +1,28 @@
+import AdminSidebar from "../components/common/AdminSidebar";
+import AdminHeader from "../components/common/AdminHeader";
+
 const AdminLayout = ({ children }) => {
   return (
-    <div style={{ display: "flex" }}>
-      <div style={{ width: "220px", background: "#222", color: "#fff" }}>
-        <p style={{ padding: "20px" }}>Admin Panel</p>
+    <div style={{ display: "flex", margin: 0, padding: 0 }}>
+
+      {/* SIDEBAR */}
+      <AdminSidebar />
+
+      {/* MAIN CONTENT */}
+      <div style={{ marginLeft: "240px", width: "100%" }}>
+        <AdminHeader />
+
+        <div
+          style={{
+            padding: "20px",
+            background: "#f9fafb",
+            minHeight: "100vh",
+          }}
+        >
+          {children}
+        </div>
       </div>
 
-      <div style={{ flex: 1, padding: "20px" }}>
-        {children}
-      </div>
     </div>
   );
 };
