@@ -23,6 +23,10 @@ import EditProduct from "../modules/admin/pages/EditProduct";
 import Orders from "../modules/admin/pages/Orders";
 import OrderDetails from "../modules/admin/pages/OrderDetails";
 import Analytics from "../modules/admin/pages/Analytics";
+import CreditDashboard from "../modules/credit/pages/CreditDashboard";
+import InvoiceList from "../modules/invoice/pages/InvoiceList";
+import Logistics from "../modules/logistics/pages/Logistics";
+import PaymentPage from "../modules/payment/pages/PaymentPage";
 
 import ProtectedRoute from "../components/common/ProtectedRoute";
 
@@ -65,6 +69,50 @@ const AppRoutes = () => {
             <ProtectedRoute>
               <MainLayout>
                 <OrdersList />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/credit"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <CreditDashboard />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/invoices"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <InvoiceList />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/shipping"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <Logistics />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/payment/:id"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <PaymentPage />
               </MainLayout>
             </ProtectedRoute>
           }

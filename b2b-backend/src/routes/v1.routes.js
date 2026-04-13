@@ -60,7 +60,7 @@ router.use("/logistics", logisticsRoutes);
 // ==========================
 // FINANCIAL SYSTEM
 // ==========================
-router.use("/credit", creditRoutes);
+router.use("/credits", creditRoutes);
 router.use("/invoices", invoiceRoutes);
 
 // ==========================

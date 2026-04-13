@@ -1,15 +1,39 @@
 // src/modules/category/category.repository.js
 
-import Category from "./category.model.js";
+// MOCK CATEGORY STORAGE
+const mockCategories = [
+  { _id: "1", name: "Electronics" },
+  { _id: "2", name: "Computing" },
+  { _id: "3", name: "Accessories" },
+];
 
-export const createCategory = (data) => Category.create(data);
+export const createCategory = async (data) => {
+  const newCategory = {
+    _id: (mockCategories.length + 1).toString(),
+    ...data,
+  };
+  mockCategories.push(newCategory);
+  return newCategory;
+};
 
-export const getAllCategories = () => Category.find();
+export const getAllCategories = async () => mockCategories;
 
-export const getCategoryById = (id) => Category.findById(id);
+export const getCategoryById = async (id) =>
+  mockCategories.find((cat) => cat._id === id);
 
-export const updateCategory = (id, data) =>
-  Category.findByIdAndUpdate(id, data, { new: true });
+export const updateCategory = async (id, data) => {
+  const index = mockCategories.findIndex((cat) => cat._id === id);
+  if (index !== -1) {
+    mockCategories[index] = { ...mockCategories[index], ...data };
+    return mockCategories[index];
+  }
+  return null;
+};
 
-export const deleteCategory = (id) =>
-  Category.findByIdAndDelete(id);
+export const deleteCategory = async (id) => {
+  const index = mockCategories.findIndex((cat) => cat._id === id);
+  if (index !== -1) {
+    return mockCategories.splice(index, 1)[0];
+  }
+  return null;
+};

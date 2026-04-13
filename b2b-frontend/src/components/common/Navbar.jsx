@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../modules/auth/authSlice";
+import NotificationBell from "../../modules/notifications/components/NotificationBell";
 
 const Navbar = () => {
   const { user, token } = useSelector((state) => state.auth);
@@ -50,6 +51,16 @@ const Navbar = () => {
             <Link to="/cart" style={{ color: "#fff", textDecoration: "none" }}>
               Cart ({items.length})
             </Link>
+            <Link to="/credit" style={{ color: "#fff", textDecoration: "none" }}>
+              Credit
+            </Link>
+            <Link to="/invoices" style={{ color: "#fff", textDecoration: "none" }}>
+              Invoices
+            </Link>
+            <Link to="/shipping" style={{ color: "#fff", textDecoration: "none" }}>
+              Shipping
+            </Link>
+            <NotificationBell />
             <button
               onClick={handleLogout}
               style={{

@@ -9,6 +9,15 @@ export const createTracking = async (req, res, next) => {
   }
 };
 
+export const getLogistics = async (req, res, next) => {
+  try {
+    const logistics = await logisticsService.fetchLogistics();
+    res.json({ success: true, logistics });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const updateTracking = async (req, res, next) => {
   try {
     const data = await logisticsService.updateTracking(

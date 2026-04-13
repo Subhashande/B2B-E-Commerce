@@ -18,6 +18,7 @@ const AdminSidebar = () => {
 
       <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
         <Link to="/admin" style={linkStyle}>Dashboard</Link>
+        <Link to="/admin/analytics" style={linkStyle}>Analytics</Link>
         <Link to="/admin/users" style={linkStyle}>Users</Link>
         <Link to="/admin/products" style={linkStyle}>Products</Link>
         <Link to="/admin/orders" style={linkStyle}>Orders</Link>

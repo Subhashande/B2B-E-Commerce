@@ -7,7 +7,10 @@ export const getNotifications = async (req, res, next) => {
     const result = await notificationService.fetchNotifications(
       req.user.id
     );
-    res.json({ success: true, data: result });
+    res.json({ 
+      success: true, 
+      notifications: result || [] 
+    });
   } catch (err) {
     next(err);
   }
