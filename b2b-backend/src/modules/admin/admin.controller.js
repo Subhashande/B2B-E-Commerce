@@ -2,6 +2,33 @@
 
 import * as adminService from "./admin.service.js";
 import { catchAsync } from "../../utils/catchAsync.js";
+import * as userRepository from "../user/user.repository.js";
+import * as productRepository from "../product/product.repository.js";
+import * as orderRepository from "../order/order.repository.js";
+
+export const getStats = catchAsync(async (req, res) => {
+  const users = await userRepository.getUsers();
+  const products = await productRepository.getProducts();
+  const orders = await orderRepository.getAllOrders();
+
+  res.status(200).json({
+    success: true,
+    stats: {
+      totalUsers: users.length,
+      totalProducts: products.length,
+      totalOrders: orders.length,
+      revenue: orders.reduce((sum, order) => sum + order.totalAmount, 0),
+    },
+  });
+});
+
+export const getAllUsers = catchAsync(async (req, res) => {
+  const users = await userRepository.getUsers();
+  res.status(200).json({
+    success: true,
+    users,
+  });
+});
 
 export const getPendingUsers = catchAsync(async (req, res) => {
   const users = await adminService.fetchPendingUsers();

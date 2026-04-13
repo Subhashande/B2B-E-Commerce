@@ -1,5 +1,6 @@
 const StatusBadge = ({ status }) => {
-  const isApproved = status === "approved";
+  const normalizedStatus = status?.toUpperCase();
+  const isApproved = normalizedStatus === "APPROVED";
 
   return (
     <span

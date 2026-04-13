@@ -1,4 +1,5 @@
-const ActionButtons = ({ onApprove, onReject }) => {
+const ActionButtons = ({ onApprove, onReject, showActions = true }) => {
+  if (!showActions) return null;
   return (
     <div style={{ display: "flex", gap: "10px" }}>
       <button

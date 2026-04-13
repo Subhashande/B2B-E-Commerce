@@ -1,4 +1,4 @@
-// src/shared/middlewares/notFound.middleware.js
+// src/shared/middleware/notFound.middleware.js
 
 export const notFound = (req, res, next) => {
   res.status(404).json({

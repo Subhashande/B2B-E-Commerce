@@ -1,40 +1,45 @@
-import * as productService from "./product.service.js";
+// src/modules/product/product.controller.js
 
-export const createProduct = async (req, res, next) => {
-  try {
-    const product = await productService.addProduct(req.body);
+import * as productRepository from "./product.repository.js";
 
-    res.status(201).json({
-      success: true,
-      product,
-    });
-  } catch (err) {
-    next(err);
-  }
+// ==========================
+// CREATE PRODUCT (optional mock)
+// ==========================
+export const createProduct = async (req, res) => {
+  const product = await productRepository.createProduct(req.body);
+  res.status(201).json({
+    success: true,
+    product,
+  });
 };
 
-export const getProducts = async (req, res, next) => {
-  try {
-    const products = await productService.fetchProducts(req.query);
-
-    res.json({
-      success: true,
-      products,
-    });
-  } catch (err) {
-    next(err);
-  }
+// ==========================
+// GET ALL PRODUCTS (MOCK)
+// ==========================
+export const getProducts = async (req, res) => {
+  const products = await productRepository.getProducts();
+  res.status(200).json({
+    success: true,
+    products,
+  });
 };
 
-export const getProduct = async (req, res, next) => {
-  try {
-    const product = await productService.fetchProductById(req.params.id);
+// ==========================
+// GET SINGLE PRODUCT (MOCK)
+// ==========================
+export const getProduct = async (req, res) => {
+  const { id } = req.params;
+  const product = await productRepository.getProductById(id);
 
-    res.json({
-      success: true,
-      product,
+  if (!product) {
+    return res.status(404).json({
+      success: false,
+      message: "Product not found",
     });
-  } catch (err) {
-    next(err);
   }
+
+  res.json({
+    success: true,
+    product,
+  });
 };

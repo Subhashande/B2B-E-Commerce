@@ -7,13 +7,21 @@ import { startOrderCleanupJob } from "./src/jobs/orderCleanup.job.js"; // ✅ ad
 
 async function startServer() {
   try {
-    // ✅ Connect DB
-    await connectDB();
+    // ✅ Try DB but don’t crash if it fails
+    try {
+      await connectDB();
+    } catch (err) {
+      console.warn("⚠️ DB not connected. Running without database.");
+    }
 
-    // ✅ Start background jobs
-    startOrderCleanupJob();
+    // ✅ Start background jobs (optional)
+    try {
+      startOrderCleanupJob();
+    } catch (err) {
+      console.warn("⚠️ Background jobs disabled.");
+    }
 
-    // ✅ Start server
+    // ✅ Start server ALWAYS
     app.listen(ENV.PORT, () => {
       console.log(`🚀 Server running on port ${ENV.PORT}`);
     });

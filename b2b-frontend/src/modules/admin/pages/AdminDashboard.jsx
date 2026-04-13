@@ -15,10 +15,9 @@ const AdminDashboard = () => {
   return (
     <div>
       <h1 style={{ marginBottom: "20px" }}>Dashboard Overview</h1>
-
       <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
-        <DashboardCard title="Users" value={stats.users || 0} color="#3b82f6" />
-        <DashboardCard title="Orders" value={stats.orders || 0} color="#10b981" />
+        <DashboardCard title="Users" value={stats.totalUsers || 0} color="#3b82f6" />
+        <DashboardCard title="Orders" value={stats.totalOrders || 0} color="#10b981" />
         <DashboardCard title="Revenue" value={stats.revenue || 0} color="#f59e0b" />
       </div>
     </div>

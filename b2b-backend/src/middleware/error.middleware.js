@@ -1,4 +1,4 @@
-// src/shared/middlewares/error.middleware.js
+// src/shared/middleware/error.middleware.js
 
 export const errorHandler = (err, req, res, next) => {
   console.error("ERROR:", err);

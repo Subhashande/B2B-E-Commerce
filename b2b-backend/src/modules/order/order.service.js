@@ -5,26 +5,28 @@ import {
   getOrderById,
 } from "./order.repository.js";
 
-import Product from "../product/product.model.js";
-import User from "../user/user.model.js";
+import * as productRepository from "../product/product.repository.js";
+import * as userRepository from "../user/user.repository.js";
 
-import { USER_STATUS } from "../../constants/userStatus.js"; // ✅ added
-import { ORDER_STATUS } from "../../constants/orderStatus.js"; // ✅ added
+import { USER_STATUS } from "../../constants/userStatus.js";
+import { ORDER_STATUS } from "../../constants/orderStatus.js";
+import AppError from "../../errors/AppError.js";
 
 export const placeOrder = async (userId, data) => {
-  const user = await User.findById(userId);
+  const user = await userRepository.getUserById(userId);
 
   if (!user) throw new Error("User not found");
 
-  if (user.status !== USER_STATUS.APPROVED) { // ✅ replaced
-    throw new Error("User not approved");
+  // ✅ CHECK APPROVAL STATUS
+  if (user.status !== USER_STATUS.APPROVED && user.role !== "ADMIN") {
+    throw new AppError("Waiting for admin approval to place orders", 403);
   }
 
   let totalAmount = 0;
   const items = [];
 
   for (const item of data.items) {
-    const product = await Product.findById(item.productId);
+    const product = await productRepository.getProductById(item.productId || item._id);
 
     if (!product) throw new Error("Product not found");
 
@@ -48,7 +50,7 @@ export const placeOrder = async (userId, data) => {
     companyId: user.companyId,
     items,
     totalAmount,
-    status: ORDER_STATUS.PENDING, // ✅ explicitly added (safe)
+    status: ORDER_STATUS.PENDING,
   });
 
   return order;
@@ -60,6 +62,12 @@ export const fetchMyOrders = async (userId) => {
 
 export const fetchAllOrders = async () => {
   return await getAllOrders();
+};
+
+export const updateStatus = async (id, status) => {
+  const order = await updateOrderStatus(id, status);
+  if (!order) throw new Error("Order not found");
+  return order;
 };
 
 export const fetchOrderById = async (id) => {

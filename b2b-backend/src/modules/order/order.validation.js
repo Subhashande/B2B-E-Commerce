@@ -9,4 +9,5 @@ export const createOrderSchema = Joi.object({
       })
     )
     .required(),
+  totalAmount: Joi.number().optional(),
 });

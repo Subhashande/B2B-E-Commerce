@@ -1,4 +1,4 @@
-// src/shared/middlewares/validate.middleware.js
+// src/shared/middleware/validate.middleware.js
 
 export const validate = (schema) => {
   return (req, res, next) => {

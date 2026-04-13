@@ -7,9 +7,33 @@ export const fetchDashboardStats = async () => {
 
 export const fetchUsers = async () => {
   const res = await apiClient.get("/admin/users");
-  if (Array.isArray(res.data)) return res.data;
-  if (res.data.users) return res.data.users;
-  if (res.data.data) return res.data.data;
+  return res.data.users || res.data || [];
+};
 
-  return [];
+export const fetchAdminProducts = async () => {
+  const res = await apiClient.get("/products");
+  return res.data.products || [];
+};
+
+export const fetchAdminOrders = async () => {
+  const res = await apiClient.get("/orders");
+  return res.data.orders || [];
+};
+
+export const deleteProduct = async (id) => {
+  await apiClient.delete(`/products/${id}`);
+};
+
+export const updateOrderStatus = async (id, status) => {
+  await apiClient.patch(`/orders/${id}/status`, { status });
+};
+
+export const approveUserApi = async (userId) => {
+  const res = await apiClient.patch(`/admin/users/${userId}/approve`);
+  return res.data;
+};
+
+export const rejectUserApi = async (userId) => {
+  const res = await apiClient.patch(`/admin/users/${userId}/reject`);
+  return res.data;
 };

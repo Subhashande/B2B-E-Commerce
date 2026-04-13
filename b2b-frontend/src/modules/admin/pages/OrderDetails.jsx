@@ -1,37 +1,45 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import apiClient from "../../../services/apiClient";
 import OrderSummaryCard from "../components/OrderSummaryCard";
 import OrderItemsTable from "../components/OrderItemsTable";
 import OrderItemRow from "../components/OrderItemRow";
 
 const OrderDetails = () => {
+  const { id } = useParams();
   const [order, setOrder] = useState(null);
 
   useEffect(() => {
-    // MOCK DATA (replace with API later)
-    setOrder({
-      _id: "ORD001",
-      customer: "Subhash",
-      total: 65000,
-      status: "pending",
-      items: [
-        { name: "Laptop", price: 50000, quantity: 1 },
-        { name: "Printer", price: 15000, quantity: 1 },
-      ],
-    });
-  }, []);
+    const fetchOrder = async () => {
+      try {
+        const res = await apiClient.get(`/v1/orders/${id}`);
+        setOrder(res.data.order);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchOrder();
+  }, [id]);
 
   if (!order) return <p>Loading...</p>;
+
+  const displayOrder = {
+    ...order,
+    customer: order.customer || order.userId,
+    total: order.total || order.totalAmount,
+    items: order.items || []
+  };
 
   return (
     <div>
       <h1 style={{ marginBottom: "20px" }}>Order Details</h1>
 
       {/* SUMMARY */}
-      <OrderSummaryCard order={order} />
+      <OrderSummaryCard order={displayOrder} />
 
       {/* ITEMS */}
       <OrderItemsTable>
-        {order.items.map((item, index) => (
+        {displayOrder.items.map((item, index) => (
           <OrderItemRow key={index} item={item} />
         ))}
       </OrderItemsTable>

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchAllProducts } from "./productService";
+import { getProducts as fetchAllProducts } from "./services/productService";
 
 export const getProducts = createAsyncThunk(
   "products/getAll",
@@ -26,6 +26,8 @@ const productSlice = createSlice({
       })
       .addCase(getProducts.fulfilled, (state, action) => {
         state.loading = false;
+
+        // ✅ IMPORTANT FIX
         state.list = action.payload;
       })
       .addCase(getProducts.rejected, (state, action) => {

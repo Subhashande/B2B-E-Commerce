@@ -3,7 +3,8 @@
 import {
   getPendingUsers,
   updateUserStatus,
-  findUserById,
+  getUserById,
+  deleteUser,
 } from "../user/user.repository.js";
 
-export { getPendingUsers, updateUserStatus, findUserById };
+export { getPendingUsers, updateUserStatus, getUserById, deleteUser };
