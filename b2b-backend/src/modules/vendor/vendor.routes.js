@@ -1,49 +1,45 @@
+// src/modules/vendor/vendor.routes.js
+
 import express from "express";
 
 import {
   createVendor,
   getVendors,
   assignVendor,
+  manualAssign,
   updateStatus,
 } from "./vendor.controller.js";
 
-import { protect } from "../../middleware/auth.middleware.js";
-import { authorize } from "../../middleware/role.middleware.js";
-import { validate } from "../../middleware/validate.middleware.js";
+import { protect } from "../../middlewares/auth.middleware.js";
+import { authorize } from "../../middlewares/role.middleware.js";
 
-import {
-  createVendorSchema,
-  assignVendorSchema,
-} from "./vendor.validation.js";
+import { ROLES } from "../../constants/roles.js";
 
 const router = express.Router();
 
-// ADMIN: create vendor
-router.post(
-  "/",
-  protect,
-  authorize("ADMIN"),
-  validate(createVendorSchema),
-  createVendor
-);
+// CREATE VENDOR (ADMIN)
+router.post("/", protect, authorize(ROLES.ADMIN), createVendor);
 
-// ADMIN: get vendors
-router.get("/", protect, authorize("ADMIN"), getVendors);
+// GET ALL
+router.get("/", protect, getVendors);
 
-// ADMIN: assign vendor to order
+// AUTO ASSIGN
 router.post(
   "/assign/:orderId",
   protect,
-  authorize("ADMIN"),
-  validate(assignVendorSchema),
+  authorize(ROLES.ADMIN),
   assignVendor
 );
 
-// ADMIN/VENDOR: update order status
-router.patch(
-  "/status/:orderId",
+// MANUAL ASSIGN
+router.post(
+  "/manual-assign/:orderId",
   protect,
-  updateStatus
+  authorize(ROLES.ADMIN),
+  manualAssign
 );
+
+// UPDATE DELIVERY STATUS
+router.put("/status/:orderId", protect, updateStatus);
 
 export default router;

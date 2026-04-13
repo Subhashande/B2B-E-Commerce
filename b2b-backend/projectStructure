@@ -2,84 +2,187 @@ b2b-backend/
 │
 ├── src/
 │
-│   ├── config/                 # App + DB + env config
+│   ├── config/
 │   │   ├── db.js
 │   │   ├── env.js
 │   │   └── logger.js
 │
-│   ├── constants/              # Enums / static values
+│   ├── constants/
 │   │   ├── roles.js
 │   │   ├── orderStatus.js
 │   │   ├── paymentStatus.js
 │   │   ├── userStatus.js
-│   │   └── vendorStatus.js
+│   │   ├── vendorStatus.js
+│   │   ├── 🔥 creditStatus.js            # NEW
+│   │   ├── 🔥 notificationTypes.js       # NEW
+│   │   └── 🔥 errorMessages.js           # NEW (recommended)
 │
-│   ├── modules/                # 🔥 DOMAIN LAYER (business logic)
+│   ├── modules/   🔥 (DOMAIN DRIVEN DESIGN)
 │
 │   │   ├── auth/
+│   │   │   ├── auth.controller.js
+│   │   │   ├── auth.service.js
+│   │   │   ├── auth.repository.js
+│   │   │   ├── auth.routes.js
+│   │   │   └── auth.validation.js
+│   │
 │   │   ├── user/
+│   │   │   ├── user.controller.js
+│   │   │   ├── user.service.js
+│   │   │   ├── user.repository.js
+│   │   │   ├── user.routes.js
+│   │   │   ├── user.validation.js
+│   │   │   └── user.model.js
+│   │
 │   │   ├── company/
+│   │   │   ├── company.controller.js
+│   │   │   ├── company.service.js
+│   │   │   ├── company.repository.js
+│   │   │   ├── company.routes.js
+│   │   │   ├── company.validation.js
+│   │   │   └── company.model.js
+│
+│   │   ├── 🔥 category/                     # NEW (for search/filter)
+│   │   │   ├── category.controller.js
+│   │   │   ├── category.service.js
+│   │   │   ├── category.repository.js
+│   │   │   ├── category.routes.js
+│   │   │   ├── category.validation.js
+│   │   │   └── category.model.js
+│
 │   │   ├── product/
+│   │   │   ├── product.controller.js
+│   │   │   ├── product.service.js
+│   │   │   ├── product.repository.js
+│   │   │   ├── product.routes.js
+│   │   │   ├── product.validation.js
+│   │   │   └── product.model.js
+│
 │   │   ├── order/
+│   │   │   ├── order.controller.js
+│   │   │   ├── order.service.js
+│   │   │   ├── order.repository.js
+│   │   │   ├── order.routes.js
+│   │   │   ├── order.validation.js
+│   │   │   └── order.model.js
+│
+│   │   ├── 🔥 payment/ (extended)
+│   │   │   ├── payment.controller.js
+│   │   │   ├── payment.service.js
+│   │   │   ├── payment.repository.js
+│   │   │   ├── payment.routes.js
+│   │   │   ├── payment.validation.js
+│   │   │   └── payment.model.js
+│
 │   │   ├── vendor/
-│   │   ├── payment/
-│   │   └── admin/
-│   │
-│   │   # Each module contains:
-│   │   # controller, service, repository, model, routes, validation
+│   │   │   ├── vendor.controller.js
+│   │   │   ├── vendor.service.js
+│   │   │   ├── vendor.repository.js
+│   │   │   ├── vendor.routes.js
+│   │   │   ├── vendor.validation.js
+│   │   │   └── vendor.model.js
 │
-│   ├── infrastructure/         # 🔥 EXTERNAL SERVICES
-│   │
-│   │   ├── payment/
-│   │   │   └── razorpay.service.js
-│   │
-│   │   ├── email/
-│   │   │   └── email.service.js
-│   │
-│   │   ├── vendor/
-│   │   │   └── assignment.service.js
+│   │   ├── 🔥 logistics/                   # NEW
+│   │   │   ├── logistics.controller.js
+│   │   │   ├── logistics.service.js
+│   │   │   ├── logistics.repository.js
+│   │   │   ├── logistics.routes.js
+│   │   │   ├── logistics.validation.js
+│   │   │   └── logistics.model.js
 │
-│   ├── shared/                 # 🔥 COMMON UTILITIES (CLEAN)
-│   │
-│   │   ├── middleware/
-│   │   │   ├── auth.middleware.js
-│   │   │   ├── role.middleware.js
-│   │   │   ├── validate.middleware.js
-│   │   │   └── error.middleware.js
-│   │
-│   │   ├── utils/
-│   │   │   ├── generateToken.js
-│   │   │   ├── hashPassword.js
-│   │   │   ├── comparePassword.js
-│   │   │   ├── responseHandler.js
-│   │   │   └── asyncHandler.js
-│   │
-│   │   ├── validators/
-│   │   │   └── common.validation.js
-│   │
-│   │   └── errors/
-│   │       └── customError.js
+│   │   ├── 🔥 review/                      # NEW
+│   │   │   ├── review.controller.js
+│   │   │   ├── review.service.js
+│   │   │   ├── review.repository.js
+│   │   │   ├── review.routes.js
+│   │   │   ├── review.validation.js
+│   │   │   └── review.model.js
 │
-│   ├── routes/                 # Central route management
+│   │   ├── 🔥 notification/                # NEW
+│   │   │   ├── notification.controller.js
+│   │   │   ├── notification.service.js
+│   │   │   ├── notification.repository.js
+│   │   │   ├── notification.routes.js
+│   │   │   ├── notification.validation.js
+│   │   │   └── notification.model.js
+│
+│   │   ├── 🔥 analytics/                   # NEW (admin insights)
+│   │   │   ├── analytics.controller.js
+│   │   │   ├── analytics.service.js
+│   │   │   ├── analytics.routes.js
+│   │   │   └── analytics.repository.js
+│
+│   │   ├── 🔥 invoice/                     # NEW
+│   │   │   ├── invoice.service.js
+│   │   │   └── invoice.utils.js
+│
+│   │   ├── 🔥 credit/                      # NEW (UDAAN CORE 🔥)
+│   │   │   ├── credit.controller.js
+│   │   │   ├── credit.service.js
+│   │   │   ├── credit.repository.js
+│   │   │   ├── credit.routes.js
+│   │   │   ├── credit.validation.js
+│   │   │   └── credit.model.js
+│
+│   │   ├── admin/
+│   │   │   ├── admin.controller.js
+│   │   │   ├── admin.service.js
+│   │   │   ├── admin.repository.js
+│   │   │   └── admin.routes.js
+│
+│
+│   ├── services/ 🔥 (KEEP AS YOU SAID)
+│   │   ├── payment.service.js
+│   │   ├── email.service.js
+│   │   ├── vendorAssignment.service.js
+│   │   ├── 🔥 search.service.js          # NEW
+│   │   └── 🔥 redis.service.js           # NEW
+│
+│
+│   ├── middlewares/
+│   │   ├── auth.middleware.js
+│   │   ├── role.middleware.js
+│   │   ├── validate.middleware.js
+│   │   ├── error.middleware.js
+│   │   ├── notFound.middleware.js
+│   │   └── upload.middleware.js
+│
+│   ├── utils/
+│   │   ├── generateToken.js
+│   │   ├── hashPassword.js
+│   │   ├── comparePassword.js
+│   │   ├── responseHandler.js
+│   │   ├── asyncHandler.js
+│   │   └── apiFeatures.js
+│
+│   ├── validations/
+│   │   └── common.validation.js
+│
+│   ├── errors/
+│   │   └── AppError.js
+│
+│   ├── routes/
 │   │   ├── index.js
 │   │   └── v1.routes.js
 │
-│   ├── jobs/                   # Background jobs
+│   ├── jobs/
 │   │   ├── orderCleanup.job.js
+│   │   ├── 🔥 creditReminder.job.js      # NEW
+│   │   └── 🔥 notification.job.js        # NEW
 │
-│   ├── docs/                   # API documentation
+│   ├── docs/
 │   │   └── swagger.js
 │
-│   ├── uploads/                # File storage
+│   ├── uploads/
 │
-│   └── app.js                  # Express app
+│   └── app.js
 │
-├── logs/                       # App logs
-├── tests/                      # Testing
+├── logs/
+├── tests/
 │
 ├── .env
 ├── .env.example
 ├── .gitignore
 ├── package.json
-├── server.js                   # Entry point
+├── server.js
 └── README.md
