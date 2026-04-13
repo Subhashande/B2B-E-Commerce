@@ -4,6 +4,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "../modules/auth/pages/Login";
 import Register from "../modules/auth/pages/Register";
 import Home from "../modules/product/pages/Home";
+import ProductDetails from "../modules/product/pages/ProductDetails";
+import Cart from "../modules/cart/pages/Cart";
+import OrdersList from "../modules/user/pages/Orders";
 
 // Layouts
 import MainLayout from "../layouts/MainLayout";
@@ -21,6 +24,7 @@ import Orders from "../modules/admin/pages/Orders";
 import OrderDetails from "../modules/admin/pages/OrderDetails";
 import Analytics from "../modules/admin/pages/Analytics";
 
+import ProtectedRoute from "../components/common/ProtectedRoute";
 
 const AppRoutes = () => {
   return (
@@ -34,6 +38,35 @@ const AppRoutes = () => {
             <MainLayout>
               <Home />
             </MainLayout>
+          }
+        />
+
+        <Route
+          path="/product/:id"
+          element={
+            <MainLayout>
+              <ProductDetails />
+            </MainLayout>
+          }
+        />
+
+        <Route
+          path="/cart"
+          element={
+            <MainLayout>
+              <Cart />
+            </MainLayout>
+          }
+        />
+
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <OrdersList />
+              </MainLayout>
+            </ProtectedRoute>
           }
         />
 
@@ -55,12 +88,14 @@ const AppRoutes = () => {
             </AuthLayout>
           }
         />
-          <Route
+                    <Route
             path="/admin"
             element={
-              <AdminLayout>
-                <AdminDashboard />
-              </AdminLayout>
+              <ProtectedRoute>
+                <AdminLayout>
+                  <AdminDashboard />
+                </AdminLayout>
+              </ProtectedRoute>
             }
           />
           <Route
@@ -91,7 +126,7 @@ const AppRoutes = () => {
           />
 
           <Route
-            path="/admin/products/edit"
+            path="/admin/products/edit/:id"
             element={
               <AdminLayout>
                 <EditProduct />
@@ -124,6 +159,15 @@ const AppRoutes = () => {
     <AdminLayout>
       <Analytics />
     </AdminLayout>
+  }
+/>
+
+<Route
+  path="/product/:id"
+  element={
+    <MainLayout>
+      <ProductDetails />
+    </MainLayout>
   }
 />
     </Routes>

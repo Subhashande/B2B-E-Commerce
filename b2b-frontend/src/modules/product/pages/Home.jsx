@@ -14,23 +14,52 @@ import EmptyState from "../components/EmptyState";
 
 const Home = () => {
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
 
-  const products = useSelector(selectProducts);
-  const loading = useSelector(selectLoading);
-  const error = useSelector(selectError);
+  // ✅ SAFE DEFAULTS (VERY IMPORTANT)
+  const products = useSelector(selectProducts) || [];
+  const loading = useSelector(selectLoading) || false;
+  const error = useSelector(selectError) || null;
 
   useEffect(() => {
     dispatch(getProducts());
   }, [dispatch]);
 
+  // NO REDIRECT OR HIDING FOR PUBLIC VIEWING
+
   return (
-    <div style={{ padding: "30px" }}>
+    <div
+      style={{
+        padding: "30px",
+        background: "#f9fafb",
+        minHeight: "100vh",
+      }}
+    >
+      {/* HEADER */}
       <ProductHeader />
 
+      {/* LOADING */}
       {loading && <ProductSkeleton />}
-      {error && <p>Error loading products</p>}
 
+      {/* ERROR */}
+      {error && (
+        <div
+          style={{
+            padding: "20px",
+            background: "#fee2e2",
+            color: "#991b1b",
+            borderRadius: "8px",
+            marginTop: "20px",
+          }}
+        >
+          ⚠️ Error loading products
+        </div>
+      )}
+
+      {/* EMPTY STATE */}
       {!loading && products.length === 0 && <EmptyState />}
+
+      {/* PRODUCT GRID */}
       {!loading && products.length > 0 && (
         <ProductGrid products={products} />
       )}

@@ -21,6 +21,7 @@ const OrderTable = ({ children }) => {
             <th>Total</th>
             <th>Status</th>
             <th>Update</th>
+            <th>Action</th>
           </tr>
         </thead>
 

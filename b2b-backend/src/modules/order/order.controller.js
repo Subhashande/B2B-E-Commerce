@@ -41,3 +41,19 @@ export const getAllOrders = async (req, res, next) => {
     next(err);
   }
 };
+
+export const updateOrderStatus = async (req, res, next) => {
+  try {
+    const order = await orderService.updateStatus(
+      req.params.id,
+      req.body.status
+    );
+
+    res.json({
+      success: true,
+      order,
+    });
+  } catch (err) {
+    next(err);
+  }
+};

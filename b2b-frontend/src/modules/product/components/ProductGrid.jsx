@@ -1,6 +1,9 @@
 import ProductCard from "./ProductCard";
 
-const ProductGrid = ({ products }) => {
+const ProductGrid = ({ products = [] }) => {
+  // ✅ safety check
+  if (!Array.isArray(products)) return null;
+
   return (
     <div
       style={{

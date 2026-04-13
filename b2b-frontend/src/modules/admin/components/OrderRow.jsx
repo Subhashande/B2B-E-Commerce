@@ -1,9 +1,24 @@
 import OrderStatusBadge from "./OrderStatusBadge";
 import UpdateStatusDropdown from "./UpdateStatusDropdown";
 import { useNavigate } from "react-router-dom";
+import { updateOrderStatus } from "../adminService";
+import { useState } from "react";
 
 const OrderRow = ({ order }) => {
   const navigate = useNavigate();
+  const [status, setStatus] = useState(order.status);
+
+  const handleStatusChange = async (newStatus) => {
+    try {
+      await updateOrderStatus(order._id, newStatus);
+      setStatus(newStatus);
+      alert("Order status updated!");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update status");
+    }
+  };
+
   return (
     <tr
       style={{
@@ -15,20 +30,18 @@ const OrderRow = ({ order }) => {
     >
       <td style={{ padding: "12px" }}>{order._id}</td>
 
-      <td style={{ padding: "12px" }}>{order.customer}</td>
+      <td style={{ padding: "12px" }}>{order.customer || order.userId}</td>
 
-      <td style={{ padding: "12px" }}>₹{order.total}</td>
+      <td style={{ padding: "12px" }}>₹{order.total || order.totalAmount}</td>
 
       <td style={{ padding: "12px" }}>
-        <OrderStatusBadge status={order.status} />
+        <OrderStatusBadge status={status} />
       </td>
 
       <td style={{ padding: "12px" }}>
         <UpdateStatusDropdown
-          status={order.status}
-          onChange={(status) =>
-            console.log("Update status:", order._id, status)
-          }
+          status={status}
+          onChange={handleStatusChange}
         />
       </td>
 

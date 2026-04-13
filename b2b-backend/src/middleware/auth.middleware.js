@@ -1,4 +1,4 @@
-// src/shared/middlewares/auth.middleware.js
+// src/shared/middleware/auth.middleware.js
 
 import jwt from "jsonwebtoken";
 
@@ -24,7 +24,7 @@ export const protect = (req, res, next) => {
 
     req.user = {
       id: decoded.id,
-      role: decoded.role,
+      role: decoded.role?.toUpperCase(),
     };
 
     next();

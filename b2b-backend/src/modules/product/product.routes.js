@@ -8,10 +8,10 @@ import {
   getProduct,
 } from "./product.controller.js";
 
-import { protect } from "../../middlewares/auth.middleware.js";
-import { authorize } from "../../middlewares/role.middleware.js";
-import { validate } from "../../middlewares/validate.middleware.js";
-import { upload } from "../../middlewares/upload.middleware.js"; // ✅ added
+import { protect } from "../../middleware/auth.middleware.js";
+import { authorize } from "../../middleware/role.middleware.js";
+import { validate } from "../../middleware/validate.middleware.js";
+import { upload } from "../../middleware/upload.middleware.js"; // ✅ added
 
 import { createProductSchema } from "./product.validation.js";
 import { ROLES } from "../../constants/roles.js";

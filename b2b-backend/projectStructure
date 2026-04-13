@@ -41,7 +41,7 @@ b2b-backend/
 │
 │   ├── shared/                 # 🔥 COMMON UTILITIES (CLEAN)
 │   │
-│   │   ├── middlewares/
+│   │   ├── middleware/
 │   │   │   ├── auth.middleware.js
 │   │   │   ├── role.middleware.js
 │   │   │   ├── validate.middleware.js

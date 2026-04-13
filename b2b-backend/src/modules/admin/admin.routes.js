@@ -5,6 +5,8 @@ import {
   getPendingUsers,
   approveUser,
   rejectUser,
+  getStats,
+  getAllUsers,
 } from "./admin.controller.js";
 
 import { protect } from "../../middleware/auth.middleware.js";
@@ -12,8 +14,14 @@ import { authorize } from "../../middleware/role.middleware.js";
 
 const router = express.Router();
 
+// Stats
+router.get("/stats", getStats);
+
+// All users
+router.get("/users", getAllUsers);
+
 /**
- * 🔐 Apply global middlewares for admin routes
+ * 🔐 Apply global middleware for admin routes
  * - Authentication required
  * - Only ADMIN role allowed
  */

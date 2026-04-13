@@ -1,19 +1,34 @@
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { getAdminProducts } from "../adminSlice";
+import apiClient from "../../../services/apiClient";
+
 const ProductRow = ({ product }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleDelete = async () => {
+    if (window.confirm(`Delete ${product.name}?`)) {
+      try {
+        await apiClient.delete(`/v1/products/${product._id}`);
+        dispatch(getAdminProducts());
+        alert("Product deleted!");
+      } catch (err) {
+        console.error(err);
+        alert("Failed to delete product");
+      }
+    }
+  };
+
   return (
     <tr
       style={{
         background: "#f9fafb",
-        borderRadius: "10px",
+        transition: "0.2s",
       }}
+      onMouseEnter={(e) => (e.currentTarget.style.background = "#eef2ff")}
+      onMouseLeave={(e) => (e.currentTarget.style.background = "#f9fafb")}
     >
-      <tr
-  style={{
-    background: "#f9fafb",
-    transition: "0.2s",
-  }}
-  onMouseEnter={(e) => (e.currentTarget.style.background = "#eef2ff")}
-  onMouseLeave={(e) => (e.currentTarget.style.background = "#f9fafb")}
-></tr>
       <td style={{ padding: "12px", fontWeight: "500" }}>
         {product.name}
       </td>
@@ -29,6 +44,7 @@ const ProductRow = ({ product }) => {
         }}
       >
         <button
+          onClick={() => navigate(`/admin/products/edit/${product._id}`)}
           style={{
             background: "#3b82f6",
             color: "#fff",
@@ -43,6 +59,7 @@ const ProductRow = ({ product }) => {
         </button>
 
         <button
+          onClick={handleDelete}
           style={{
             background: "#ef4444",
             color: "#fff",

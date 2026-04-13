@@ -1,11 +1,30 @@
 // modules/auth/auth.repository.js
+import * as userRepository from "../user/user.repository.js";
 
-import User from "../user/user.model.js";
-import Company from "../company/company.model.js";
+// Mock Company storage
+const mockCompanies = [];
 
-export const createCompany = (data) => Company.create(data);
+export const createCompany = async (data) => {
+  const company = {
+    _id: (mockCompanies.length + 1).toString(),
+    ...data,
+  };
+  mockCompanies.push(company);
+  return company;
+};
 
-export const createUser = (data) => User.create(data);
+export const createUser = async (data) => {
+  const users = await userRepository.getUsers();
+  const newUser = {
+    _id: (users.length + 1).toString(),
+    ...data,
+    createdAt: new Date(),
+  };
+  users.push(newUser);
+  return newUser;
+};
 
-export const findUserByEmail = (email) =>
-  User.findOne({ email }).populate("companyId");
+export const findUserByEmail = async (email) => {
+  const users = await userRepository.getUsers();
+  return users.find((u) => u.email === email);
+};

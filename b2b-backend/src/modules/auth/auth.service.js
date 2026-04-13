@@ -1,77 +1,80 @@
 // modules/auth/auth.service.js
 
-import {
-  createCompany,
-  createUser,
-  findUserByEmail,
-} from "./auth.repository.js";
+import * as userRepository from "../user/user.repository.js";
+import jwt from "jsonwebtoken";
+import AppError from "../../errors/AppError.js";
 
-import { hashPassword } from "../../utils/hashPassword.js";
-import { comparePassword } from "../../utils/comparePassword.js";
-import { generateToken } from "../../utils/generateToken.js";
-
-import { USER_STATUS } from "../../constants/userStatus.js";
-import AppError from "../../errors/AppError.js"; // ✅ added
+const generateToken = (id, role) => {
+  return jwt.sign({ id, role }, process.env.JWT_SECRET, {
+    expiresIn: "30d",
+  });
+};
 
 export const registerUser = async (data) => {
-  const { name, email, password, companyName, gst, address } = data;
+  const { name, email, password } = data;
 
-  const existingUser = await findUserByEmail(email);
+  const users = await userRepository.getUsers();
+  const existingUser = users.find((u) => u.email === email);
 
-  // ✅ updated error handling
   if (existingUser) {
-    throw new AppError("User already exists", 400);
+    throw new AppError("Email already registered", 400);
   }
 
-  const hashedPassword = await hashPassword(password);
-
-  const company = await createCompany({
-    name: companyName,
-    gst,
-    address,
-  });
-
-  await createUser({
+  // ✅ MOCK REGISTRATION
+  const newUser = {
+    _id: (users.length + 1).toString(),
     name,
     email,
-    password: hashedPassword,
-    companyId: company._id,
-    status: USER_STATUS.PENDING,
-  });
+    password, // In real apps, we hash this
+    role: "USER",
+    status: "PENDING",
+    createdAt: new Date(),
+  };
+
+  users.push(newUser);
 
   return {
-    message: "Registration successful. Await admin approval.",
+    success: true,
+    message: "Registration successful",
+    user: {
+      id: newUser._id,
+      name: newUser.name,
+      email: newUser.email,
+      role: newUser.role,
+      status: newUser.status,
+    },
   };
 };
 
-export const loginUser = async ({ email, password }) => {
-  const user = await findUserByEmail(email);
-
-  // ✅ consistent error messages (security best practice)
-  if (!user) {
-    throw new AppError("Invalid email or password", 401);
+export const loginUser = async (data) => {
+  if (!data) {
+    throw new AppError("Request body is missing", 400);
   }
 
-  const isMatch = await comparePassword(password, user.password);
+  const { email, password } = data;
 
-  if (!isMatch) {
-    throw new AppError("Invalid email or password", 401);
+  if (!email || !password) {
+    throw new AppError("Email and password are required", 400);
   }
 
-  if (user.status !== USER_STATUS.APPROVED) {
-    throw new AppError("User not approved yet", 403);
-  }
+  // ✅ PERMISSIVE MOCK LOGIN
+  // If email contains "admin", log in as ADMIN, else as USER
+  const isInternalAdmin = email.toLowerCase().includes("admin");
+  const userId = isInternalAdmin ? "1" : "2";
+  const userRole = isInternalAdmin ? "ADMIN" : "USER";
 
-  const token = generateToken(user);
-
+  const token = generateToken(userId, userRole);
+  
   return {
+    success: true,
     message: "Login successful",
     token,
     user: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
+      id: userId,
+      name: isInternalAdmin ? "Admin" : "Subhash",
+      email: email,
+      role: userRole,
+      status: "APPROVED", // Auto-approve for this permissive mode
     },
   };
 };

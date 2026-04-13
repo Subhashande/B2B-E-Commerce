@@ -1,6 +1,11 @@
+import { useNavigate } from "react-router-dom";
+
 const ProductCard = ({ product }) => {
+  const navigate = useNavigate();
+
   return (
     <div
+      onClick={() => navigate(`/product/${product._id}`)}
       style={{
         background: "#fff",
         borderRadius: "12px",

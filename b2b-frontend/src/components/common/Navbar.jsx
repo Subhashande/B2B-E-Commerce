@@ -1,6 +1,18 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../../modules/auth/authSlice";
 
 const Navbar = () => {
+  const { user, token } = useSelector((state) => state.auth);
+  const { items } = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+  };
+
   return (
     <div
       style={{
@@ -20,18 +32,49 @@ const Navbar = () => {
       </h2>
 
       {/* NAV LINKS */}
-      <div style={{ display: "flex", gap: "20px" }}>
+      <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
         <Link to="/" style={{ color: "#fff", textDecoration: "none" }}>
           Home
         </Link>
 
-        <Link to="/login" style={{ color: "#fff", textDecoration: "none" }}>
-          Login
-        </Link>
+        {token ? (
+          <>
+            {user?.role === "ADMIN" && (
+              <Link to="/admin" style={{ color: "#fff", textDecoration: "none" }}>
+                Admin
+              </Link>
+            )}
+            <Link to="/orders" style={{ color: "#fff", textDecoration: "none" }}>
+              Orders
+            </Link>
+            <Link to="/cart" style={{ color: "#fff", textDecoration: "none" }}>
+              Cart ({items.length})
+            </Link>
+            <button
+              onClick={handleLogout}
+              style={{
+                background: "transparent",
+                border: "1px solid #fff",
+                color: "#fff",
+                padding: "4px 8px",
+                borderRadius: "4px",
+                cursor: "pointer"
+              }}
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <Link to="/login" style={{ color: "#fff", textDecoration: "none" }}>
+              Login
+            </Link>
 
-        <Link to="/register" style={{ color: "#fff", textDecoration: "none" }}>
-          Register
-        </Link>
+            <Link to="/register" style={{ color: "#fff", textDecoration: "none" }}>
+              Register
+            </Link>
+          </>
+        )}
       </div>
     </div>
   );

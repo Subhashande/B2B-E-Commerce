@@ -11,9 +11,11 @@ const UpdateStatusDropdown = ({ status, onChange }) => {
   cursor: "pointer",
 }}
     >
-      <option value="pending">Pending</option>
-      <option value="shipped">Shipped</option>
-      <option value="delivered">Delivered</option>
+      <option value="PENDING">Pending</option>
+      <option value="PROCESSING">Processing</option>
+      <option value="SHIPPED">Shipped</option>
+      <option value="DELIVERED">Delivered</option>
+      <option value="CANCELLED">Cancelled</option>
     </select>
   );
 };

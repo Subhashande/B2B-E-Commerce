@@ -1,4 +1,4 @@
-// src/middlewares/role.middleware.js
+// src/middleware/role.middleware.js
 
 import { ROLES } from "../constants/roles.js"; // ✅ optional but good
 

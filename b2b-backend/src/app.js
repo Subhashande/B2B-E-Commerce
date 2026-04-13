@@ -7,8 +7,16 @@ import routes from "./routes/index.js";
 import { errorHandler } from "./middleware/error.middleware.js";
 import { notFound } from "./middleware/notFound.middleware.js";
 import { setupSwagger } from "./docs/swagger.js"; // ✅ added
+import cors from "cors";
 
 const app = express();
+
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175"], // frontend URLs
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 
