@@ -7,14 +7,15 @@ import {
   getOrderById,
 } from "./order.repository.js";
 
-import Product from "../product/product.model.js";
-import User from "../user/user.model.js";
+import * as productRepository from "../product/product.repository.js";
+import * as userRepository from "../user/user.repository.js";
+import * as creditService from "../credit/credit.service.js";
 
 import { ORDER_STATUS } from "../../constants/orderStatus.js";
 import { USER_STATUS } from "../../constants/userStatus.js";
 
 export const placeOrder = async (userId, data) => {
-  const user = await User.findById(userId);
+  const user = await userRepository.getUserById(userId);
 
   if (!user) throw new Error("User not found");
 
@@ -26,7 +27,7 @@ export const placeOrder = async (userId, data) => {
   const items = [];
 
   for (const item of data.items) {
-    const product = await Product.findById(item.productId);
+    const product = await productRepository.getProductById(item.productId);
 
     if (!product) throw new Error("Product not found");
 
@@ -35,8 +36,9 @@ export const placeOrder = async (userId, data) => {
     }
 
     // 🔥 STOCK DEDUCTION
-    product.stock -= item.quantity;
-    await product.save();
+    await productRepository.updateProduct(product._id, {
+      stock: product.stock - item.quantity,
+    });
 
     const price = product.price;
 
@@ -51,14 +53,19 @@ export const placeOrder = async (userId, data) => {
 
   const orderData = {
     userId,
-    companyId: user.companyId,
+    companyId: user.companyId || "mock_company_id",
     items,
     totalAmount,
     paymentType: data.paymentType || "ONLINE",
+    status: data.paymentType === "CREDIT" ? ORDER_STATUS.PROCESSING : ORDER_STATUS.PENDING,
   };
 
   // 🔥 CREDIT SUPPORT
   if (orderData.paymentType === "CREDIT") {
+    const isEligible = await creditService.checkCreditEligibility(userId, totalAmount);
+    if (!isEligible) throw new Error("Insufficient credit limit");
+    
+    await creditService.useCredit(userId, totalAmount);
     orderData.dueDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
   }
 
@@ -91,7 +98,6 @@ export const updateOrderStatus = async (id, status) => {
   if (!order) throw new Error("Order not found");
 
   order.status = status;
-  await order.save();
-
+  // Mock repository update
   return order;
 };

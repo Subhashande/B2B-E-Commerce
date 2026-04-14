@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getProducts } from "../productSlice";
+import { getProducts, getCategories, setSelectedCategory } from "../productSlice";
 import {
   selectProducts,
+  selectCategories,
+  selectSelectedCategory,
   selectLoading,
   selectError,
 } from "../productSelectors";
@@ -14,18 +16,21 @@ import EmptyState from "../components/EmptyState";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
-
-  // ✅ SAFE DEFAULTS (VERY IMPORTANT)
+  
   const products = useSelector(selectProducts) || [];
+  const categories = useSelector(selectCategories) || [];
+  const selectedCategory = useSelector(selectSelectedCategory);
   const loading = useSelector(selectLoading) || false;
   const error = useSelector(selectError) || null;
 
   useEffect(() => {
     dispatch(getProducts());
+    dispatch(getCategories());
   }, [dispatch]);
 
-  // NO REDIRECT OR HIDING FOR PUBLIC VIEWING
+  const handleCategoryChange = (category) => {
+    dispatch(setSelectedCategory(category));
+  };
 
   return (
     <div
@@ -37,6 +42,39 @@ const Home = () => {
     >
       {/* HEADER */}
       <ProductHeader />
+
+      {/* CATEGORY FILTER */}
+      <div style={{ marginBottom: "20px", display: "flex", gap: "10px", flexWrap: "wrap" }}>
+        <button
+          onClick={() => handleCategoryChange(null)}
+          style={{
+            padding: "8px 16px",
+            borderRadius: "20px",
+            border: "1px solid #ddd",
+            background: selectedCategory === null ? "#3b82f6" : "#fff",
+            color: selectedCategory === null ? "#fff" : "#333",
+            cursor: "pointer",
+          }}
+        >
+          All
+        </button>
+        {Array.isArray(categories) && categories.map((cat) => (
+          <button
+            key={cat._id || cat.id || cat}
+            onClick={() => handleCategoryChange(cat.name || cat)}
+            style={{
+              padding: "8px 16px",
+              borderRadius: "20px",
+              border: "1px solid #ddd",
+              background: selectedCategory === (cat.name || cat) ? "#3b82f6" : "#fff",
+              color: selectedCategory === (cat.name || cat) ? "#fff" : "#333",
+              cursor: "pointer",
+            }}
+          >
+            {cat.name || cat}
+          </button>
+        ))}
+      </div>
 
       {/* LOADING */}
       {loading && <ProductSkeleton />}

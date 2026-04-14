@@ -19,7 +19,7 @@ export const getCredit = async (req, res, next) => {
     const result = await creditService.getCreditDetails(
       req.user.id
     );
-    res.json({ success: true, data: result });
+    res.json(result || { limit: 0, used: 0 });
   } catch (err) {
     next(err);
   }

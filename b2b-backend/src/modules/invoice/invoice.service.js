@@ -1,13 +1,14 @@
 import {
   createInvoice,
   getInvoiceByOrder,
+  getInvoices,
 } from "./invoice.repository.js";
 
-import Order from "../order/order.model.js";
+import * as orderRepository from "../order/order.repository.js";
 import { generateInvoiceNumber } from "./invoice.utils.js";
 
 export const generateInvoice = async (orderId) => {
-  const order = await Order.findById(orderId);
+  const order = await orderRepository.getOrderById(orderId);
 
   if (!order) throw new Error("Order not found");
 
@@ -23,4 +24,8 @@ export const generateInvoice = async (orderId) => {
     amount: order.totalAmount,
     invoiceNumber,
   });
+};
+
+export const fetchInvoices = async () => {
+  return await getInvoices();
 };

@@ -24,9 +24,13 @@ export const getOrderById = async (id) => {
 };
 
 export const updateOrderStatus = async (id, status) => {
+  return updateOrder(id, { status });
+};
+
+export const updateOrder = async (id, data) => {
   const index = mockOrders.findIndex((o) => o._id === id);
   if (index !== -1) {
-    mockOrders[index].status = status;
+    mockOrders[index] = { ...mockOrders[index], ...data };
     return mockOrders[index];
   }
   return null;

@@ -2,15 +2,31 @@
 
 import Notification from "./notification.model.js";
 
-export const createNotification = (data) =>
-  Notification.create(data);
+// MOCK NOTIFICATION STORAGE
+const mockNotifications = [];
 
-export const getUserNotifications = (userId) =>
-  Notification.find({ userId }).sort({ createdAt: -1 });
+export const createNotification = async (data) => {
+  const newNotification = {
+    _id: (mockNotifications.length + 1).toString(),
+    ...data,
+    isRead: false,
+    createdAt: new Date(),
+  };
+  mockNotifications.push(newNotification);
+  return newNotification;
+};
 
-export const markAsRead = (id) =>
-  Notification.findByIdAndUpdate(
-    id,
-    { isRead: true },
-    { new: true }
-  );
+export const getUserNotifications = async (userId) => {
+  return mockNotifications
+    .filter((n) => n.userId === userId)
+    .sort((a, b) => b.createdAt - a.createdAt);
+};
+
+export const markAsRead = async (id) => {
+  const notification = mockNotifications.find((n) => n._id === id);
+  if (notification) {
+    notification.isRead = true;
+    return notification;
+  }
+  return null;
+};

@@ -11,3 +11,12 @@ export const createInvoice = async (req, res, next) => {
     next(err);
   }
 };
+
+export const getInvoices = async (req, res, next) => {
+  try {
+    const invoices = await invoiceService.fetchInvoices();
+    res.json({ success: true, invoices });
+  } catch (err) {
+    next(err);
+  }
+};

@@ -16,13 +16,13 @@ export const setCreditLimit = async (userId, amount) => {
   if (!credit) {
     credit = await createCredit({
       userId,
-      creditLimit: amount,
-      availableCredit: amount,
+      limit: amount,
+      used: 0,
+      status: CREDIT_STATUS.ACTIVE,
     });
   } else {
-    credit.creditLimit = amount;
-    credit.availableCredit = amount - credit.usedCredit;
-    await credit.save();
+    credit.limit = amount;
+    // Keep used as is
   }
 
   return credit;
@@ -32,7 +32,10 @@ export const setCreditLimit = async (userId, amount) => {
 export const getCreditDetails = async (userId) => {
   const credit = await findCreditByUser(userId);
 
-  if (!credit) throw new AppError("Credit not found", 404);
+  if (!credit) {
+    // Return a default if not found
+    return { limit: 0, used: 0 };
+  }
 
   return credit;
 };
@@ -41,39 +44,25 @@ export const getCreditDetails = async (userId) => {
 export const checkCreditEligibility = async (userId, amount) => {
   const credit = await findCreditByUser(userId);
 
-  if (!credit) throw new AppError("No credit account", 400);
+  if (!credit) return false;
 
-  if (credit.status !== CREDIT_STATUS.ACTIVE) {
-    throw new AppError("Credit account not active", 403);
-  }
-
-  if (credit.availableCredit < amount) {
-    throw new AppError("Insufficient credit", 400);
-  }
-
-  return true;
+  const remaining = (credit.limit || 0) - (credit.used || 0);
+  return remaining >= amount;
 };
 
 // 🔥 DEDUCT CREDIT
 export const useCredit = async (userId, amount) => {
   const credit = await findCreditByUser(userId);
-
-  credit.usedCredit += amount;
-  credit.availableCredit -= amount;
-
-  await credit.save();
+  if (credit) {
+    credit.used = (credit.used || 0) + amount;
+  }
 };
 
 // 🔥 REPAY CREDIT
 export const repayCredit = async (userId, amount) => {
   const credit = await findCreditByUser(userId);
-
-  credit.usedCredit -= amount;
-  credit.availableCredit += amount;
-
-  if (credit.usedCredit < 0) credit.usedCredit = 0;
-
-  await credit.save();
-
+  if (credit) {
+    credit.used = Math.max(0, (credit.used || 0) - amount);
+  }
   return credit;
 };

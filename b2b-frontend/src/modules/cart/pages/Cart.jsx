@@ -4,6 +4,7 @@ import { removeFromCart, updateQuantity, selectCartTotal, clearCart } from "../c
 import { useNavigate } from "react-router-dom";
 import Button from "../../../components/ui/Button";
 import { placeOrder } from "../../../services/orderService";
+import apiClient from "../../../services/apiClient";
 
 const Cart = () => {
   const { items } = useSelector((state) => state.cart);
@@ -27,6 +28,19 @@ const Cart = () => {
 
     try {
       setLoading(true);
+      
+      // CHECK CREDIT
+      try {
+        const creditRes = await apiClient.get("/credits");
+        const remainingCredit = creditRes.data.limit - creditRes.data.used;
+        if (total > remainingCredit) {
+          alert(`Insufficient credit! Remaining: ₹${remainingCredit}, Required: ₹${total}`);
+          return;
+        }
+      } catch (e) {
+        console.warn("Could not verify credit, proceeding anyway");
+      }
+
       const orderData = {
         items: items.map((item) => ({
           productId: item._id,
@@ -35,10 +49,11 @@ const Cart = () => {
         totalAmount: total,
       };
 
-      await placeOrder(orderData);
+      const res = await placeOrder(orderData);
       dispatch(clearCart());
-      alert("Order placed successfully!");
-      navigate("/orders");
+      alert("Order placed successfully! Proceeding to payment...");
+      const order = res.order || res.data?.order || res;
+      navigate(`/payment/${order._id || order.id}`);
     } catch (err) {
       console.error(err);
       alert("Failed to place order. " + (err.response?.data?.message || ""));

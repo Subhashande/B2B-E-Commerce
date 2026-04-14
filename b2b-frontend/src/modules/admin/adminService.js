@@ -1,8 +1,8 @@
 import apiClient from "../../services/apiClient";
 
 export const fetchDashboardStats = async () => {
-  const res = await apiClient.get("/admin/stats");
-  return res.data;
+  const res = await apiClient.get("/analytics/stats");
+  return res.data.data || res.data;
 };
 
 export const fetchUsers = async () => {

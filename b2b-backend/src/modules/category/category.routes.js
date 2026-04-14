@@ -10,9 +10,9 @@ import {
   deleteCategory,
 } from "./category.controller.js";
 
-import { protect } from "../../middlewares/auth.middleware.js";
-import { authorize } from "../../middlewares/role.middleware.js";
-import { validate } from "../../middlewares/validate.middleware.js";
+import { protect } from "../../middleware/auth.middleware.js";
+import { authorize } from "../../middleware/role.middleware.js";
+import { validate } from "../../middleware/validate.middleware.js";
 
 import {
   createCategorySchema,

@@ -49,3 +49,12 @@ export const getProducts = async (filter = {}, options = {}) => {
 
 export const getProductById = async (id) =>
   mockProducts.find((p) => p._id === id);
+
+export const updateProduct = async (id, data) => {
+  const index = mockProducts.findIndex((p) => p._id === id);
+  if (index !== -1) {
+    mockProducts[index] = { ...mockProducts[index], ...data };
+    return mockProducts[index];
+  }
+  return null;
+};
